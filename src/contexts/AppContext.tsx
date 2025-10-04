@@ -52,17 +52,29 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   };
 
   const triggerApprovalFlow = (expense: Expense) => {
-    // Get the first manager
+    // Get the employee's manager
     const employee = users.find(u => u.id === expense.employeeId);
     const manager = users.find(u => u.id === employee?.managerId);
     
-    if (manager) {
+    // Check if manager has isManagerApprover field checked
+    if (manager && manager.isManagerApprover) {
       const approval: Approval = {
         approverId: manager.id,
         approverName: manager.name,
         decision: 'pending',
       };
       updateExpense(expense.id, { approvals: [approval] });
+    } else {
+      // If manager is not an approver, skip to next approver in sequence
+      const nextApprover = getNextApprover(expense, '');
+      if (nextApprover) {
+        const approval: Approval = {
+          approverId: nextApprover.id,
+          approverName: nextApprover.name,
+          decision: 'pending',
+        };
+        updateExpense(expense.id, { approvals: [approval] });
+      }
     }
   };
 
