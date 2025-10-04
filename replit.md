@@ -20,16 +20,14 @@ ExesManen is a smart expense management application with automated approvals and
 - **Real-time**: Supabase Realtime for notifications
 
 ### Key Features
-- Role-based access control (Admin, Manager, Employee)
-- Configurable multi-step approval workflows with drag-and-drop sequence builder
-- Manager opt-in/opt-out for approval workflows (isManagerApprover field)
-- Support for role-based and specific user approval steps
-- Smart approval routing that skips non-approving managers
-- OCR receipt scanning and data extraction
-- Currency conversion support
-- Real-time notifications
-- Audit logging
-- Team management
+- **Interactive Landing Page**: Modern home page with animations, gradient text, stats showcase, and feature highlights
+- **Role-based Access Control**: Admin, Manager, and Employee dashboards with tailored workflows
+- **Advanced OCR**: AI-powered receipt scanning supporting both printed and handwritten text
+- **Multi-step Approvals**: Configurable approval workflows with drag-and-drop sequence builder
+- **Smart Routing**: Intelligent approval routing that skips non-approving managers
+- **Real-time Feedback**: Loading animations, progress bars, and instant notifications
+- **Currency Conversion**: Multi-currency support with automatic conversion
+- **Audit Trail**: Comprehensive logging of all actions and changes
 
 ## Project Structure
 ```
@@ -98,6 +96,19 @@ Configured for Replit Autoscale deployment:
 - **Deployment**: Configured for Autoscale with production build
 
 ## Recent Changes
+- **2025-10-04**: Major UI/UX and OCR enhancements
+  - Created interactive landing page with animations, gradient text, stats cards, and feature showcase
+  - Enhanced OCR to support handwritten receipts with image preprocessing (binarization)
+  - Added MAX_IMAGE_DIMENSION guard (3000px) to prevent memory issues
+  - Implemented comprehensive error handling with fallback to original images
+  - Added AbortController pattern for handling concurrent receipt uploads
+  - Enhanced ExpenseCard with hover animations, color-coded icons, and progress bars
+  - Improved EmployeeDashboard with loading spinners, tooltips, and AI-powered badges
+  - Added empty state for better first-time user experience
+  - Implemented smooth fade-in animations for expense cards
+  - Added differentiated user feedback (success/warning/error toasts)
+  - File input remains enabled during OCR processing for better UX
+
 - **2025-10-04**: Project imported and configured for Replit
   - Installed all dependencies via bun
   - Configured workflow to run on port 5000
