@@ -21,7 +21,10 @@ ExesManen is a smart expense management application with automated approvals and
 
 ### Key Features
 - Role-based access control (Admin, Manager, Employee)
-- Multi-step approval workflows
+- Configurable multi-step approval workflows with drag-and-drop sequence builder
+- Manager opt-in/opt-out for approval workflows (isManagerApprover field)
+- Support for role-based and specific user approval steps
+- Smart approval routing that skips non-approving managers
 - OCR receipt scanning and data extraction
 - Currency conversion support
 - Real-time notifications
@@ -76,6 +79,16 @@ npm run build
 Configured for Replit Autoscale deployment with production build optimization.
 
 ## Recent Changes
+- **2025-10-04**: Enhanced approval workflow system
+  - Added `isManagerApprover` field to User type to allow managers to opt-in/opt-out of approval workflows
+  - Implemented configurable approval sequences with admin UI for creating and managing multi-step workflows
+  - Added drag-and-drop functionality (@dnd-kit/sortable) for intuitive sequence step reordering
+  - Support for both role-based (e.g., "manager", "admin") and specific user approval steps
+  - Smart approval routing that automatically skips non-approving managers and advances to next eligible approver
+  - Approval flow now iterates through all sequence steps until an eligible approver is found
+  - Sequences tab in admin dashboard for managing multiple approval workflows
+  - Visual sequence builder with step type selection, user/role picker, and drag handles
+
 - **2025-10-04**: Added login page and authentication
   - Created login page with traditional email/password form
   - Added one-click demo login buttons for all user roles (Admin, Manager, Employee)
