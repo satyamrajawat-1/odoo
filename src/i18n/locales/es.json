@@ -1,0 +1,95 @@
+{
+  "app": {
+    "title": "ExesManen",
+    "subtitle": "Gestión Inteligente de Gastos",
+    "tagline": "Transforma la gestión de gastos con escaneo de recibos con IA, aprobaciones automatizadas y información en tiempo real"
+  },
+  "common": {
+    "getStarted": "Comenzar",
+    "learnMore": "Saber Más",
+    "login": "Iniciar Sesión",
+    "logout": "Cerrar Sesión",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "submit": "Enviar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "approve": "Aprobar",
+    "reject": "Rechazar",
+    "close": "Cerrar",
+    "back": "Volver",
+    "next": "Siguiente"
+  },
+  "stats": {
+    "activeUsers": "Usuarios Activos",
+    "expensesProcessed": "Gastos Procesados",
+    "timeSaved": "Tiempo Ahorrado"
+  },
+  "dashboard": {
+    "admin": "Panel de Administración",
+    "manager": "Panel de Gerente",
+    "employee": "Panel de Empleado",
+    "analytics": "Analítica",
+    "expenses": "Todos los Gastos",
+    "users": "Usuarios",
+    "sequences": "Secuencias",
+    "rules": "Reglas de Aprobación",
+    "pending": "Aprobaciones Pendientes",
+    "team": "Gastos del Equipo",
+    "myExpenses": "Mis Gastos"
+  },
+  "analytics": {
+    "totalExpenses": "Gastos Totales",
+    "approvedTotal": "Total Aprobado",
+    "avgExpense": "Gasto Promedio",
+    "monthlyGrowth": "Crecimiento Mensual",
+    "trends": "Tendencias y Predicciones",
+    "categories": "Desglose por Categoría",
+    "status": "Análisis de Estado",
+    "totalTransactions": "transacciones totales",
+    "approvalRate": "tasa de aprobación",
+    "perTransaction": "Por transacción",
+    "vsPreviousMonth": "vs mes anterior",
+    "expenseTrends": "Tendencias de Gastos con Predicciones Futuras",
+    "historicalData": "Datos históricos con pronóstico de 3 meses basado en análisis de tendencias",
+    "monthlyOverview": "Resumen Mensual de Gastos",
+    "byCategory": "Gastos por Categoría",
+    "categoryDetails": "Detalles de Categoría",
+    "transactions": "transacciones",
+    "byStatus": "Gastos por Estado"
+  },
+  "expense": {
+    "submit": "Enviar Gasto",
+    "category": "Categoría",
+    "amount": "Monto",
+    "description": "Descripción",
+    "date": "Fecha",
+    "receipt": "Recibo",
+    "status": "Estado",
+    "approved": "Aprobado",
+    "pending": "Pendiente",
+    "rejected": "Rechazado",
+    "uploadReceipt": "Subir Recibo",
+    "scanReceipt": "Escanear Recibo",
+    "viewDetails": "Ver Detalles",
+    "noExpenses": "Aún no hay gastos",
+    "startSubmitting": "Comience a enviar gastos para verlos aquí"
+  },
+  "approval": {
+    "timeline": "Cronología de Aprobación",
+    "comment": "Comentario",
+    "optional": "opcional",
+    "addComment": "Añadir un comentario...",
+    "approveExpense": "Aprobar Gasto",
+    "rejectExpense": "Rechazar Gasto"
+  },
+  "login": {
+    "title": "Iniciar Sesión en ExesManen",
+    "email": "Correo Electrónico",
+    "password": "Contraseña",
+    "demoLogin": "Inicio de Sesión Demo",
+    "loginAsAdmin": "Iniciar como Administrador",
+    "loginAsManager": "Iniciar como Gerente",
+    "loginAsEmployee": "Iniciar como Empleado"
+  }
+}

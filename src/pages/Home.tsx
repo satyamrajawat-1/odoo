@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { LanguageSelector } from '@/components/LanguageSelector';
 import { 
   FileSpreadsheet, 
   ScanLine, 
@@ -18,6 +20,7 @@ import {
 
 const Home = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [scrollY, setScrollY] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -74,13 +77,18 @@ const Home = () => {
   ];
 
   const stats = [
-    { label: 'Active Users', value: '500+', icon: Users },
-    { label: 'Expenses Processed', value: '10K+', icon: FileSpreadsheet },
-    { label: 'Time Saved', value: '80%', icon: TrendingUp },
+    { label: t('stats.activeUsers'), value: '500+', icon: Users },
+    { label: t('stats.expensesProcessed'), value: '10K+', icon: FileSpreadsheet },
+    { label: t('stats.timeSaved'), value: '80%', icon: TrendingUp },
   ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+      {/* Language Selector in Top Right */}
+      <div className="fixed top-4 right-4 z-50">
+        <LanguageSelector />
+      </div>
+
       {/* Hero Section */}
       <div className="relative overflow-hidden">
         <div 
@@ -96,16 +104,15 @@ const Home = () => {
           >
             <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 bg-primary/10 rounded-full border border-primary/20">
               <Zap className="h-4 w-4 text-primary" />
-              <span className="text-sm font-medium">Intelligent Expense Management</span>
+              <span className="text-sm font-medium">{t('app.subtitle')}</span>
             </div>
             
             <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent">
-              ExesManen
+              {t('app.title')}
             </h1>
             
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 leading-relaxed">
-              Transform your expense management with AI-powered receipt scanning,
-              automated approvals, and real-time insights
+              {t('app.tagline')}
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
@@ -114,7 +121,7 @@ const Home = () => {
                 className="text-lg px-8 py-6 group"
                 onClick={() => navigate('/login')}
               >
-                Get Started
+                {t('common.getStarted')}
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
               <Button 
@@ -123,7 +130,7 @@ const Home = () => {
                 className="text-lg px-8 py-6"
                 onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
               >
-                Learn More
+                {t('common.learnMore')}
               </Button>
             </div>
 

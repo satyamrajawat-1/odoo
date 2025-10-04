@@ -1,0 +1,95 @@
+{
+  "app": {
+    "title": "ExesManen",
+    "subtitle": "Intelligente Spesenverwaltung",
+    "tagline": "Transformieren Sie Ihre Spesenverwaltung mit KI-gestützter Belegerfassung, automatisierten Genehmigungen und Echtzeit-Einblicken"
+  },
+  "common": {
+    "getStarted": "Loslegen",
+    "learnMore": "Mehr Erfahren",
+    "login": "Anmelden",
+    "logout": "Abmelden",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "submit": "Einreichen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "approve": "Genehmigen",
+    "reject": "Ablehnen",
+    "close": "Schließen",
+    "back": "Zurück",
+    "next": "Weiter"
+  },
+  "stats": {
+    "activeUsers": "Aktive Benutzer",
+    "expensesProcessed": "Bearbeitete Spesen",
+    "timeSaved": "Zeit Gespart"
+  },
+  "dashboard": {
+    "admin": "Admin-Dashboard",
+    "manager": "Manager-Dashboard",
+    "employee": "Mitarbeiter-Dashboard",
+    "analytics": "Analytik",
+    "expenses": "Alle Spesen",
+    "users": "Benutzer",
+    "sequences": "Sequenzen",
+    "rules": "Genehmigungsregeln",
+    "pending": "Ausstehende Genehmigungen",
+    "team": "Team-Spesen",
+    "myExpenses": "Meine Spesen"
+  },
+  "analytics": {
+    "totalExpenses": "Gesamtspesen",
+    "approvedTotal": "Genehmigt Gesamt",
+    "avgExpense": "Durchschnittliche Spesen",
+    "monthlyGrowth": "Monatliches Wachstum",
+    "trends": "Trends und Prognosen",
+    "categories": "Kategorie-Aufschlüsselung",
+    "status": "Status-Analyse",
+    "totalTransactions": "Gesamttransaktionen",
+    "approvalRate": "Genehmigungsrate",
+    "perTransaction": "Pro Transaktion",
+    "vsPreviousMonth": "vs Vormonat",
+    "expenseTrends": "Spesentrends mit Zukunftsprognosen",
+    "historicalData": "Historische Daten mit 3-Monats-Prognose basierend auf Trendanalyse",
+    "monthlyOverview": "Monatliche Spesenübersicht",
+    "byCategory": "Spesen nach Kategorie",
+    "categoryDetails": "Kategoriedetails",
+    "transactions": "Transaktionen",
+    "byStatus": "Spesen nach Status"
+  },
+  "expense": {
+    "submit": "Spesen Einreichen",
+    "category": "Kategorie",
+    "amount": "Betrag",
+    "description": "Beschreibung",
+    "date": "Datum",
+    "receipt": "Beleg",
+    "status": "Status",
+    "approved": "Genehmigt",
+    "pending": "Ausstehend",
+    "rejected": "Abgelehnt",
+    "uploadReceipt": "Beleg Hochladen",
+    "scanReceipt": "Beleg Scannen",
+    "viewDetails": "Details Anzeigen",
+    "noExpenses": "Noch keine Spesen",
+    "startSubmitting": "Beginnen Sie mit der Einreichung von Spesen, um sie hier zu sehen"
+  },
+  "approval": {
+    "timeline": "Genehmigungszeitlinie",
+    "comment": "Kommentar",
+    "optional": "optional",
+    "addComment": "Kommentar hinzufügen...",
+    "approveExpense": "Spesen Genehmigen",
+    "rejectExpense": "Spesen Ablehnen"
+  },
+  "login": {
+    "title": "Bei ExesManen Anmelden",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "demoLogin": "Demo-Anmeldung",
+    "loginAsAdmin": "Als Administrator Anmelden",
+    "loginAsManager": "Als Manager Anmelden",
+    "loginAsEmployee": "Als Mitarbeiter Anmelden"
+  }
+}

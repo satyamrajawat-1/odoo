@@ -96,6 +96,22 @@ Configured for Replit Autoscale deployment:
 - **Deployment**: Configured for Autoscale with production build
 
 ## Recent Changes
+- **2025-10-04**: Analytics Dashboard and Multi-language Support
+  - **Analytics Dashboard**: Added comprehensive analytics dashboard for Admin and Manager roles
+    - Category-wise expense breakdown with pie charts and detailed statistics
+    - Total company expenses with key metrics (total, approved, average, monthly growth)
+    - Trend analysis with future predictions based on historical data
+    - 3-month forecast using trend analysis algorithm
+    - Status analysis with visual bar charts
+    - Integrated into both AdminDashboard and ManagerDashboard as default tab
+  - **Multi-language Support (i18n)**: Implemented internationalization framework
+    - Support for 5 languages: English, Spanish, French, German, and Chinese
+    - Language selector component in navigation
+    - Automatic language detection from browser settings
+    - Regional code normalization (e.g., en-US → en)
+    - Translation keys for landing page and common components
+    - Persistent language preference via localStorage
+
 - **2025-10-04**: Fresh GitHub import successfully configured for Replit
   - **Dependencies**: Installed 419 packages via bun install
   - **Workflow**: Configured "Server" workflow running `bun run dev` on port 5000

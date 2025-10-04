@@ -1,0 +1,95 @@
+{
+  "app": {
+    "title": "ExesManen",
+    "subtitle": "Intelligent Expense Management",
+    "tagline": "Transform your expense management with AI-powered receipt scanning, automated approvals, and real-time insights"
+  },
+  "common": {
+    "getStarted": "Get Started",
+    "learnMore": "Learn More",
+    "login": "Login",
+    "logout": "Logout",
+    "save": "Save",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "delete": "Delete",
+    "edit": "Edit",
+    "approve": "Approve",
+    "reject": "Reject",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next"
+  },
+  "stats": {
+    "activeUsers": "Active Users",
+    "expensesProcessed": "Expenses Processed",
+    "timeSaved": "Time Saved"
+  },
+  "dashboard": {
+    "admin": "Admin Dashboard",
+    "manager": "Manager Dashboard",
+    "employee": "Employee Dashboard",
+    "analytics": "Analytics",
+    "expenses": "All Expenses",
+    "users": "Users",
+    "sequences": "Sequences",
+    "rules": "Approval Rules",
+    "pending": "Pending Approvals",
+    "team": "Team Expenses",
+    "myExpenses": "My Expenses"
+  },
+  "analytics": {
+    "totalExpenses": "Total Expenses",
+    "approvedTotal": "Approved Total",
+    "avgExpense": "Average Expense",
+    "monthlyGrowth": "Monthly Growth",
+    "trends": "Trends & Predictions",
+    "categories": "Category Breakdown",
+    "status": "Status Analysis",
+    "totalTransactions": "total transactions",
+    "approvalRate": "approval rate",
+    "perTransaction": "Per transaction",
+    "vsPreviousMonth": "vs previous month",
+    "expenseTrends": "Expense Trends with Future Predictions",
+    "historicalData": "Historical data with 3-month forecast based on trend analysis",
+    "monthlyOverview": "Monthly Expense Overview",
+    "byCategory": "Expenses by Category",
+    "categoryDetails": "Category Details",
+    "transactions": "transactions",
+    "byStatus": "Expenses by Status"
+  },
+  "expense": {
+    "submit": "Submit Expense",
+    "category": "Category",
+    "amount": "Amount",
+    "description": "Description",
+    "date": "Date",
+    "receipt": "Receipt",
+    "status": "Status",
+    "approved": "Approved",
+    "pending": "Pending",
+    "rejected": "Rejected",
+    "uploadReceipt": "Upload Receipt",
+    "scanReceipt": "Scan Receipt",
+    "viewDetails": "View Details",
+    "noExpenses": "No expenses yet",
+    "startSubmitting": "Start submitting expenses to see them here"
+  },
+  "approval": {
+    "timeline": "Approval Timeline",
+    "comment": "Comment",
+    "optional": "optional",
+    "addComment": "Add a comment...",
+    "approveExpense": "Approve Expense",
+    "rejectExpense": "Reject Expense"
+  },
+  "login": {
+    "title": "Login to ExesManen",
+    "email": "Email",
+    "password": "Password",
+    "demoLogin": "Demo Login",
+    "loginAsAdmin": "Login as Admin",
+    "loginAsManager": "Login as Manager",
+    "loginAsEmployee": "Login as Employee"
+  }
+}

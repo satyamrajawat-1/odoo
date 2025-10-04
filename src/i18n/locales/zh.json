@@ -1,0 +1,95 @@
+{
+  "app": {
+    "title": "ExesManen",
+    "subtitle": "智能费用管理",
+    "tagline": "通过AI驱动的收据扫描、自动化审批和实时洞察转变您的费用管理"
+  },
+  "common": {
+    "getStarted": "开始使用",
+    "learnMore": "了解更多",
+    "login": "登录",
+    "logout": "登出",
+    "save": "保存",
+    "cancel": "取消",
+    "submit": "提交",
+    "delete": "删除",
+    "edit": "编辑",
+    "approve": "批准",
+    "reject": "拒绝",
+    "close": "关闭",
+    "back": "返回",
+    "next": "下一步"
+  },
+  "stats": {
+    "activeUsers": "活跃用户",
+    "expensesProcessed": "已处理费用",
+    "timeSaved": "节省时间"
+  },
+  "dashboard": {
+    "admin": "管理员仪表板",
+    "manager": "经理仪表板",
+    "employee": "员工仪表板",
+    "analytics": "分析",
+    "expenses": "所有费用",
+    "users": "用户",
+    "sequences": "序列",
+    "rules": "审批规则",
+    "pending": "待审批",
+    "team": "团队费用",
+    "myExpenses": "我的费用"
+  },
+  "analytics": {
+    "totalExpenses": "总费用",
+    "approvedTotal": "已批准总额",
+    "avgExpense": "平均费用",
+    "monthlyGrowth": "月度增长",
+    "trends": "趋势与预测",
+    "categories": "类别细分",
+    "status": "状态分析",
+    "totalTransactions": "总交易数",
+    "approvalRate": "批准率",
+    "perTransaction": "每笔交易",
+    "vsPreviousMonth": "与上月对比",
+    "expenseTrends": "费用趋势与未来预测",
+    "historicalData": "基于趋势分析的历史数据及3个月预测",
+    "monthlyOverview": "月度费用概览",
+    "byCategory": "按类别统计费用",
+    "categoryDetails": "类别详情",
+    "transactions": "交易",
+    "byStatus": "按状态统计费用"
+  },
+  "expense": {
+    "submit": "提交费用",
+    "category": "类别",
+    "amount": "金额",
+    "description": "描述",
+    "date": "日期",
+    "receipt": "收据",
+    "status": "状态",
+    "approved": "已批准",
+    "pending": "待处理",
+    "rejected": "已拒绝",
+    "uploadReceipt": "上传收据",
+    "scanReceipt": "扫描收据",
+    "viewDetails": "查看详情",
+    "noExpenses": "暂无费用",
+    "startSubmitting": "开始提交费用以在此查看"
+  },
+  "approval": {
+    "timeline": "审批时间线",
+    "comment": "评论",
+    "optional": "可选",
+    "addComment": "添加评论...",
+    "approveExpense": "批准费用",
+    "rejectExpense": "拒绝费用"
+  },
+  "login": {
+    "title": "登录 ExesManen",
+    "email": "电子邮件",
+    "password": "密码",
+    "demoLogin": "演示登录",
+    "loginAsAdmin": "以管理员身份登录",
+    "loginAsManager": "以经理身份登录",
+    "loginAsEmployee": "以员工身份登录"
+  }
+}

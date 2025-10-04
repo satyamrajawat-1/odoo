@@ -1,0 +1,95 @@
+{
+  "app": {
+    "title": "ExesManen",
+    "subtitle": "Gestion Intelligente des Dépenses",
+    "tagline": "Transformez votre gestion des dépenses avec la numérisation de reçus par IA, les approbations automatisées et les informations en temps réel"
+  },
+  "common": {
+    "getStarted": "Commencer",
+    "learnMore": "En Savoir Plus",
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "submit": "Soumettre",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "approve": "Approuver",
+    "reject": "Rejeter",
+    "close": "Fermer",
+    "back": "Retour",
+    "next": "Suivant"
+  },
+  "stats": {
+    "activeUsers": "Utilisateurs Actifs",
+    "expensesProcessed": "Dépenses Traitées",
+    "timeSaved": "Temps Économisé"
+  },
+  "dashboard": {
+    "admin": "Tableau de Bord Administrateur",
+    "manager": "Tableau de Bord Gestionnaire",
+    "employee": "Tableau de Bord Employé",
+    "analytics": "Analytique",
+    "expenses": "Toutes les Dépenses",
+    "users": "Utilisateurs",
+    "sequences": "Séquences",
+    "rules": "Règles d'Approbation",
+    "pending": "Approbations en Attente",
+    "team": "Dépenses de l'Équipe",
+    "myExpenses": "Mes Dépenses"
+  },
+  "analytics": {
+    "totalExpenses": "Dépenses Totales",
+    "approvedTotal": "Total Approuvé",
+    "avgExpense": "Dépense Moyenne",
+    "monthlyGrowth": "Croissance Mensuelle",
+    "trends": "Tendances et Prévisions",
+    "categories": "Répartition par Catégorie",
+    "status": "Analyse de Statut",
+    "totalTransactions": "transactions totales",
+    "approvalRate": "taux d'approbation",
+    "perTransaction": "Par transaction",
+    "vsPreviousMonth": "vs mois précédent",
+    "expenseTrends": "Tendances des Dépenses avec Prévisions Futures",
+    "historicalData": "Données historiques avec prévisions sur 3 mois basées sur l'analyse des tendances",
+    "monthlyOverview": "Aperçu Mensuel des Dépenses",
+    "byCategory": "Dépenses par Catégorie",
+    "categoryDetails": "Détails de Catégorie",
+    "transactions": "transactions",
+    "byStatus": "Dépenses par Statut"
+  },
+  "expense": {
+    "submit": "Soumettre une Dépense",
+    "category": "Catégorie",
+    "amount": "Montant",
+    "description": "Description",
+    "date": "Date",
+    "receipt": "Reçu",
+    "status": "Statut",
+    "approved": "Approuvé",
+    "pending": "En Attente",
+    "rejected": "Rejeté",
+    "uploadReceipt": "Télécharger le Reçu",
+    "scanReceipt": "Scanner le Reçu",
+    "viewDetails": "Voir les Détails",
+    "noExpenses": "Aucune dépense pour le moment",
+    "startSubmitting": "Commencez à soumettre des dépenses pour les voir ici"
+  },
+  "approval": {
+    "timeline": "Chronologie d'Approbation",
+    "comment": "Commentaire",
+    "optional": "facultatif",
+    "addComment": "Ajouter un commentaire...",
+    "approveExpense": "Approuver la Dépense",
+    "rejectExpense": "Rejeter la Dépense"
+  },
+  "login": {
+    "title": "Connexion à ExesManen",
+    "email": "E-mail",
+    "password": "Mot de Passe",
+    "demoLogin": "Connexion Démo",
+    "loginAsAdmin": "Se Connecter en tant qu'Administrateur",
+    "loginAsManager": "Se Connecter en tant que Gestionnaire",
+    "loginAsEmployee": "Se Connecter en tant qu'Employé"
+  }
+}
