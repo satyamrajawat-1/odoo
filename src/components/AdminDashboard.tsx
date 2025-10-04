@@ -9,8 +9,9 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ExpenseCard } from './ExpenseCard';
 import { ApprovalTimeline } from './ApprovalTimeline';
+import { AnalyticsDashboard } from './AnalyticsDashboard';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Settings, Users, Receipt, GitBranch, Plus, Trash2, GripVertical, CheckCircle2, XCircle } from 'lucide-react';
+import { Settings, Users, Receipt, GitBranch, Plus, Trash2, GripVertical, CheckCircle2, XCircle, BarChart3 } from 'lucide-react';
 import { Expense, ApprovalRuleType, ApprovalSequence, ApprovalSequenceStep } from '@/types';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
@@ -263,8 +264,12 @@ export function AdminDashboard() {
         <p className="text-muted-foreground">Manage company settings and oversee all expenses</p>
       </div>
 
-      <Tabs defaultValue="expenses" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4">
+      <Tabs defaultValue="analytics" className="space-y-4">
+        <TabsList className="grid w-full grid-cols-5">
+          <TabsTrigger value="analytics">
+            <BarChart3 className="mr-2 h-4 w-4" />
+            Analytics
+          </TabsTrigger>
           <TabsTrigger value="expenses">
             <Receipt className="mr-2 h-4 w-4" />
             All Expenses
@@ -282,6 +287,10 @@ export function AdminDashboard() {
             Approval Rules
           </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="analytics" className="space-y-4">
+          <AnalyticsDashboard expenses={expenses} currency={company.currency} />
+        </TabsContent>
 
         <TabsContent value="expenses" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">

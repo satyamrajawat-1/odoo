@@ -6,13 +6,14 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { ExpenseCard } from './ExpenseCard';
 import { ApprovalTimeline } from './ApprovalTimeline';
+import { AnalyticsDashboard } from './AnalyticsDashboard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CheckCircle2, XCircle } from 'lucide-react';
+import { CheckCircle2, XCircle, BarChart3 } from 'lucide-react';
 import { Expense } from '@/types';
 import { toast } from 'sonner';
 
 export function ManagerDashboard() {
-  const { currentUser, expenses, processApproval } = useApp();
+  const { currentUser, expenses, company, processApproval } = useApp();
   const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null);
   const [comment, setComment] = useState('');
 
@@ -48,8 +49,12 @@ export function ManagerDashboard() {
         <p className="text-muted-foreground">Review and approve team expenses</p>
       </div>
 
-      <Tabs defaultValue="pending" className="space-y-4">
+      <Tabs defaultValue="analytics" className="space-y-4">
         <TabsList>
+          <TabsTrigger value="analytics">
+            <BarChart3 className="mr-2 h-4 w-4" />
+            Analytics
+          </TabsTrigger>
           <TabsTrigger value="pending">
             Pending Approvals ({pendingApprovals.length})
           </TabsTrigger>
@@ -57,6 +62,10 @@ export function ManagerDashboard() {
             Team Expenses ({teamExpenses.length})
           </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="analytics" className="space-y-4">
+          <AnalyticsDashboard expenses={teamExpenses} currency={company.currency} />
+        </TabsContent>
 
         <TabsContent value="pending" className="space-y-4">
           {pendingApprovals.length === 0 ? (
