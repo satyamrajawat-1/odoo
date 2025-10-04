@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { User, Company, Expense, ApprovalRule, Approval, ApprovalSequence } from '@/types';
+import { User, Company, Expense, ApprovalRule, Approval, ApprovalSequence, ApprovalSequenceStep } from '@/types';
 import { initializeMockData } from '@/lib/mockData';
 
 interface AppContextType {
@@ -190,12 +190,27 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const resolveStepToApprover = (step: ApprovalSequenceStep, expense: Expense): User | null => {
+    if (step.type === 'user') {
+      return users.find(u => u.id === step.value) || null;
+    } else if (step.type === 'role') {
+      const employee = users.find(u => u.id === expense.employeeId);
+      if (step.value === 'manager' && employee?.managerId) {
+        const manager = users.find(u => u.id === employee.managerId);
+        if (manager && manager.isManagerApprover) {
+          return manager;
+        }
+        return null;
+      }
+      return users.find(u => u.role === step.value) || null;
+    }
+    return null;
+  };
+
   const getNextApprover = (expense: Expense, currentApproverId: string): User | null => {
-    // Use configured approval sequence if available
     const sequence = approvalSequences.find(s => s.id === approvalRules.sequenceId && s.isActive);
     
     if (!sequence) {
-      // Fallback to hardcoded logic if no sequence configured
       const currentApprover = users.find(u => u.id === currentApproverId);
       if (!currentApprover) return null;
 
@@ -207,12 +222,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       return null;
     }
 
-    // Find current step in sequence
     let currentStep = 0;
     if (currentApproverId) {
       const currentApprover = users.find(u => u.id === currentApproverId);
       if (currentApprover) {
-        // Find which step this approver is at
         const stepIndex = sequence.steps.findIndex(s => 
           (s.type === 'user' && s.value === currentApproverId) ||
           (s.type === 'role' && s.value === currentApprover.role)
@@ -223,22 +236,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       }
     }
 
-    // Get next step
-    if (currentStep < sequence.steps.length) {
-      const nextStep = sequence.steps[currentStep];
-      
-      if (nextStep.type === 'user') {
-        return users.find(u => u.id === nextStep.value) || null;
-      } else if (nextStep.type === 'role') {
-        // Find first user with this role
-        const employee = users.find(u => u.id === expense.employeeId);
-        if (nextStep.value === 'manager' && employee?.managerId) {
-          const manager = users.find(u => u.id === employee.managerId);
-          if (manager && manager.isManagerApprover) {
-            return manager;
-          }
-        }
-        return users.find(u => u.role === nextStep.value) || null;
+    for (let i = currentStep; i < sequence.steps.length; i++) {
+      const approver = resolveStepToApprover(sequence.steps[i], expense);
+      if (approver) {
+        return approver;
       }
     }
 

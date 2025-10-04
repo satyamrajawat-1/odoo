@@ -9,10 +9,120 @@ import { Button } from '@/components/ui/button';
 import { ExpenseCard } from './ExpenseCard';
 import { ApprovalTimeline } from './ApprovalTimeline';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Settings, Users, Receipt, GitBranch, Plus, Trash2, MoveUp, MoveDown } from 'lucide-react';
+import { Settings, Users, Receipt, GitBranch, Plus, Trash2, GripVertical } from 'lucide-react';
 import { Expense, ApprovalRuleType, ApprovalSequence, ApprovalSequenceStep } from '@/types';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+
+interface SortableStepItemProps {
+  step: ApprovalSequenceStep;
+  index: number;
+  totalSteps: number;
+  users: any[];
+  onUpdateType: (index: number, type: 'role' | 'user') => void;
+  onUpdateValue: (index: number, value: string) => void;
+  onRemove: (index: number) => void;
+}
+
+function SortableStepItem({ step, index, totalSteps, users, onUpdateType, onUpdateValue, onRemove }: SortableStepItemProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+  } = useSortable({ id: step.step.toString() });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <Card ref={setNodeRef} style={style} data-testid={`step-${index}`}>
+      <CardContent className="pt-4">
+        <div className="flex items-center gap-3">
+          <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing">
+            <GripVertical className="h-5 w-5 text-muted-foreground" />
+          </div>
+
+          <div className="flex-1 grid grid-cols-3 gap-3">
+            <div>
+              <Label className="text-xs">Step {step.step}</Label>
+              <Select
+                value={step.type}
+                onValueChange={(value) => onUpdateType(index, value as 'role' | 'user')}
+              >
+                <SelectTrigger className="mt-1" data-testid={`select-type-${index}`}>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="role">By Role</SelectItem>
+                  <SelectItem value="user">Specific User</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="col-span-2">
+              <Label className="text-xs">
+                {step.type === 'role' ? 'Select Role' : 'Select User'}
+              </Label>
+              <Select
+                value={step.value}
+                onValueChange={(value) => onUpdateValue(index, value)}
+              >
+                <SelectTrigger className="mt-1" data-testid={`select-value-${index}`}>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {step.type === 'role' ? (
+                    <>
+                      <SelectItem value="manager">Manager</SelectItem>
+                      <SelectItem value="admin">Admin</SelectItem>
+                    </>
+                  ) : (
+                    users.map(user => (
+                      <SelectItem key={user.id} value={user.id}>
+                        {user.name} ({user.role})
+                      </SelectItem>
+                    ))
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={() => onRemove(index)}
+            disabled={totalSteps === 1}
+            data-testid={`button-remove-${index}`}
+          >
+            <Trash2 className="h-4 w-4 text-destructive" />
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
 
 export function AdminDashboard() {
   const { 
@@ -50,6 +160,26 @@ export function AdminDashboard() {
     toast.success('Approval rules updated successfully!');
   };
 
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    
+    if (over && active.id !== over.id) {
+      const oldIndex = sequenceSteps.findIndex(s => s.step.toString() === active.id);
+      const newIndex = sequenceSteps.findIndex(s => s.step.toString() === over.id);
+      
+      const reordered = arrayMove(sequenceSteps, oldIndex, newIndex);
+      const renumbered = reordered.map((step, i) => ({ ...step, step: i + 1 }));
+      setSequenceSteps(renumbered);
+    }
+  };
+
   const handleAddStep = () => {
     const newStep: ApprovalSequenceStep = {
       step: sequenceSteps.length + 1,
@@ -62,14 +192,6 @@ export function AdminDashboard() {
   const handleRemoveStep = (index: number) => {
     const updated = sequenceSteps.filter((_, i) => i !== index);
     const renumbered = updated.map((step, i) => ({ ...step, step: i + 1 }));
-    setSequenceSteps(renumbered);
-  };
-
-  const handleMoveStep = (index: number, direction: 'up' | 'down') => {
-    const newSteps = [...sequenceSteps];
-    const targetIndex = direction === 'up' ? index - 1 : index + 1;
-    [newSteps[index], newSteps[targetIndex]] = [newSteps[targetIndex], newSteps[index]];
-    const renumbered = newSteps.map((step, i) => ({ ...step, step: i + 1 }));
     setSequenceSteps(renumbered);
   };
 
@@ -436,99 +558,38 @@ export function AdminDashboard() {
 
             <div>
               <div className="flex items-center justify-between mb-2">
-                <Label>Approval Steps</Label>
+                <Label>Approval Steps (Drag to reorder)</Label>
                 <Button size="sm" variant="outline" onClick={handleAddStep} data-testid="button-add-step">
                   <Plus className="mr-2 h-4 w-4" />
                   Add Step
                 </Button>
               </div>
               
-              <div className="space-y-3">
-                {sequenceSteps.map((step, index) => (
-                  <Card key={step.step} data-testid={`step-${index}`}>
-                    <CardContent className="pt-4">
-                      <div className="flex items-center gap-3">
-                        <div className="flex flex-col gap-2">
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => handleMoveStep(index, 'up')}
-                            disabled={index === 0}
-                            data-testid={`button-move-up-${index}`}
-                          >
-                            <MoveUp className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => handleMoveStep(index, 'down')}
-                            disabled={index === sequenceSteps.length - 1}
-                            data-testid={`button-move-down-${index}`}
-                          >
-                            <MoveDown className="h-4 w-4" />
-                          </Button>
-                        </div>
-
-                        <div className="flex-1 grid grid-cols-3 gap-3">
-                          <div>
-                            <Label className="text-xs">Step {step.step}</Label>
-                            <Select
-                              value={step.type}
-                              onValueChange={(value) => handleUpdateStepType(index, value as 'role' | 'user')}
-                            >
-                              <SelectTrigger className="mt-1" data-testid={`select-type-${index}`}>
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="role">By Role</SelectItem>
-                                <SelectItem value="user">Specific User</SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-
-                          <div className="col-span-2">
-                            <Label className="text-xs">
-                              {step.type === 'role' ? 'Select Role' : 'Select User'}
-                            </Label>
-                            <Select
-                              value={step.value}
-                              onValueChange={(value) => handleUpdateStepValue(index, value)}
-                            >
-                              <SelectTrigger className="mt-1" data-testid={`select-value-${index}`}>
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {step.type === 'role' ? (
-                                  <>
-                                    <SelectItem value="manager">Manager</SelectItem>
-                                    <SelectItem value="admin">Admin</SelectItem>
-                                  </>
-                                ) : (
-                                  users.map(user => (
-                                    <SelectItem key={user.id} value={user.id}>
-                                      {user.name} ({user.role})
-                                    </SelectItem>
-                                  ))
-                                )}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        </div>
-
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => handleRemoveStep(index)}
-                          disabled={sequenceSteps.length === 1}
-                          data-testid={`button-remove-${index}`}
-                        >
-                          <Trash2 className="h-4 w-4 text-destructive" />
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
+              >
+                <SortableContext
+                  items={sequenceSteps.map(s => s.step.toString())}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <div className="space-y-3">
+                    {sequenceSteps.map((step, index) => (
+                      <SortableStepItem
+                        key={step.step}
+                        step={step}
+                        index={index}
+                        totalSteps={sequenceSteps.length}
+                        users={users}
+                        onUpdateType={handleUpdateStepType}
+                        onUpdateValue={handleUpdateStepValue}
+                        onRemove={handleRemoveStep}
+                      />
+                    ))}
+                  </div>
+                </SortableContext>
+              </DndContext>
             </div>
 
             <div className="flex gap-2 pt-4">
