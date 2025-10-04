@@ -46,6 +46,7 @@ export interface Expense {
   date: string;
   description: string;
   receiptImage?: string;
+  receiptHash?: string;
   ocrData?: OCRData;
   status: ExpenseStatus;
   approvals: Approval[];

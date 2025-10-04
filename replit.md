@@ -96,6 +96,23 @@ Configured for Replit Autoscale deployment:
 - **Deployment**: Configured for Autoscale with production build
 
 ## Recent Changes
+- **2025-10-04**: Enhanced admin approval, batch uploads, and fraud detection
+  - **Admin Approval Fix**: Added approval buttons to AdminDashboard so admins can approve/reject expenses when they're the next approver in the sequence
+  - **Batch Receipt Upload**: Employees can now upload multiple receipts simultaneously with batch OCR processing
+    - Supports multi-file selection with individual OCR processing for each receipt
+    - Review and edit interface for each uploaded receipt before submission
+    - Progress indicators and error handling for each receipt in the batch
+  - **Fraud Detection System**: Implemented duplicate receipt detection to prevent fraudulent submissions
+    - Image hash calculation for all receipts (both single and batch uploads)
+    - OCR data persistence for comparison (vendor, amount, date)
+    - Multi-criteria duplicate detection: exact image match, similar amounts, matching dates, vendor similarity, description similarity
+    - Confidence scoring system (0-100%) for duplicate matches
+    - Exact duplicates (100% confidence - identical receipt images) are always blocked
+    - Potential duplicates (<100% confidence) show warning with acknowledgement flow
+    - Batch mode detects duplicates both against historical expenses and within the same batch
+    - Known limitation: Batch acknowledgement flow needs enhancement for better UX
+  - Added receiptHash and ocrData fields to Expense type for fraud detection persistence
+
 - **2025-10-04**: Major UI/UX and OCR enhancements
   - Created interactive landing page with animations, gradient text, stats cards, and feature showcase
   - Enhanced OCR to support handwritten receipts with image preprocessing (binarization)

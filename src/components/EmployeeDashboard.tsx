@@ -15,6 +15,9 @@ import { toast } from 'sonner';
 import { extractReceiptData } from '@/lib/ocr';
 import { convertCurrency } from '@/lib/currency';
 import { LoadingSpinner } from '@/components/ui/loading-spinner';
+import { calculateImageHash, findDuplicates } from '@/lib/fraud-detection';
+import { AlertCircle } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const CATEGORIES = ['Travel', 'Meals', 'Office Supplies', 'Software', 'Entertainment', 'Other'];
 const CURRENCIES = ['USD', 'EUR', 'GBP', 'JPY', 'CNY'];
@@ -28,6 +31,12 @@ interface ReceiptData {
   description: string;
   isProcessing: boolean;
   hasError: boolean;
+  receiptHash?: string;
+  ocrData?: {
+    vendor?: string;
+    amount?: number;
+    date?: string;
+  };
 }
 
 export function EmployeeDashboard() {
@@ -38,6 +47,7 @@ export function EmployeeDashboard() {
   const [processingAbortController, setProcessingAbortController] = useState<AbortController | null>(null);
   const [isBatchMode, setIsBatchMode] = useState(false);
   const [batchReceipts, setBatchReceipts] = useState<ReceiptData[]>([]);
+  const [duplicateWarning, setDuplicateWarning] = useState<{ message: string; confidence: number } | null>(null);
   
   const [formData, setFormData] = useState({
     amount: '',
@@ -46,6 +56,8 @@ export function EmployeeDashboard() {
     date: new Date().toISOString().split('T')[0],
     description: '',
     receiptImage: null as File | null,
+    receiptHash: '' as string,
+    ocrData: null as any,
   });
 
   const myExpenses = expenses.filter(e => e.employeeId === currentUser?.id);
@@ -62,11 +74,15 @@ export function EmployeeDashboard() {
     const abortController = new AbortController();
     setProcessingAbortController(abortController);
     
+    setDuplicateWarning(null);
     setFormData(prev => ({ ...prev, receiptImage: file }));
     setIsProcessing(true);
     toast.info('Processing receipt with OCR...', { duration: 2000 });
 
     try {
+      // Calculate image hash for fraud detection
+      const imageHash = await calculateImageHash(file);
+      
       const ocrData = await extractReceiptData(file);
       
       if (abortController.signal.aborted) {
@@ -81,9 +97,12 @@ export function EmployeeDashboard() {
           amount: ocrData.amount?.toString() || prev.amount,
           date: ocrData.date || prev.date,
           description: ocrData.description || prev.description,
+          receiptHash: imageHash,
+          ocrData,
         }));
         toast.success('Receipt scanned! Fields auto-filled (editable)');
       } else {
+        setFormData(prev => ({ ...prev, receiptHash: imageHash, ocrData }));
         toast.warning('Receipt uploaded but data extraction was limited. Please verify fields.');
       }
     } catch (error) {
@@ -109,6 +128,49 @@ export function EmployeeDashboard() {
     }
 
     const amount = parseFloat(formData.amount);
+    
+    // Check for duplicate receipts - always block exact duplicates (100% confidence)
+    const duplicates = findDuplicates(
+      {
+        amount,
+        date: formData.date,
+        description: formData.description,
+        receiptHash: formData.receiptHash,
+        ocrData: formData.ocrData,
+      },
+      myExpenses.map(exp => ({
+        amount: exp.amount,
+        date: exp.date,
+        description: exp.description,
+        receiptHash: exp.receiptHash,
+        ocrData: exp.ocrData,
+      }))
+    );
+
+    if (duplicates.length > 0) {
+      const topMatch = duplicates[0];
+      
+      // Block exact duplicates (identical receipt image)
+      if (topMatch.match.confidence === 100) {
+        toast.error('Identical receipt already submitted. Cannot proceed.');
+        setDuplicateWarning({
+          message: `Exact duplicate: ${topMatch.match.reason}`,
+          confidence: topMatch.match.confidence,
+        });
+        return;
+      }
+      
+      // Show warning for high-confidence duplicates but allow acknowledgement
+      if (!duplicateWarning) {
+        setDuplicateWarning({
+          message: `Potential duplicate detected: ${topMatch.match.reason}`,
+          confidence: topMatch.match.confidence,
+        });
+        toast.warning('Duplicate receipt detected! Review and submit again to proceed anyway.');
+        return;
+      }
+    }
+
     const convertedAmount = await convertCurrency(amount, formData.currency, company.currency);
 
     const newExpense: Expense = {
@@ -121,6 +183,8 @@ export function EmployeeDashboard() {
       category: formData.category,
       date: formData.date,
       description: formData.description,
+      receiptHash: formData.receiptHash,
+      ocrData: formData.ocrData,
       status: 'pending',
       approvals: [],
       createdAt: new Date(),
@@ -129,6 +193,7 @@ export function EmployeeDashboard() {
     addExpense(newExpense);
     toast.success('Expense submitted for approval!');
     setIsSubmitOpen(false);
+    setDuplicateWarning(null);
     setFormData({
       amount: '',
       currency: 'USD',
@@ -136,6 +201,8 @@ export function EmployeeDashboard() {
       date: new Date().toISOString().split('T')[0],
       description: '',
       receiptImage: null,
+      receiptHash: '',
+      ocrData: null,
     });
   };
 
@@ -160,6 +227,7 @@ export function EmployeeDashboard() {
 
     for (let i = 0; i < fileArray.length; i++) {
       try {
+        const imageHash = await calculateImageHash(fileArray[i]);
         const ocrData = await extractReceiptData(fileArray[i]);
         
         setBatchReceipts(prev => prev.map((receipt, idx) => 
@@ -171,6 +239,8 @@ export function EmployeeDashboard() {
             category: receipt.category,
             isProcessing: false,
             hasError: false,
+            receiptHash: imageHash,
+            ocrData,
           } : receipt
         ));
       } catch (error) {
@@ -192,6 +262,63 @@ export function EmployeeDashboard() {
       return;
     }
 
+    // Check for duplicates in batch (both against historical and within batch)
+    const duplicatesFound: Array<{ index: number; reason: string }> = [];
+    
+    for (let i = 0; i < validReceipts.length; i++) {
+      const receipt = validReceipts[i];
+      const receiptData = {
+        amount: parseFloat(receipt.amount),
+        date: receipt.date,
+        description: receipt.description,
+        receiptHash: receipt.receiptHash,
+        ocrData: receipt.ocrData,
+      };
+      
+      // Check against historical expenses
+      const historicalDuplicates = findDuplicates(
+        receiptData,
+        myExpenses.map(exp => ({
+          amount: exp.amount,
+          date: exp.date,
+          description: exp.description,
+          receiptHash: exp.receiptHash,
+          ocrData: exp.ocrData,
+        }))
+      );
+
+      if (historicalDuplicates.length > 0) {
+        duplicatesFound.push({ index: i, reason: `Historical: ${historicalDuplicates[0].match.reason}` });
+        continue;
+      }
+      
+      // Check against other receipts in the same batch
+      const otherBatchReceipts = validReceipts.slice(0, i).map(r => ({
+        amount: parseFloat(r.amount),
+        date: r.date,
+        description: r.description,
+        receiptHash: r.receiptHash,
+        ocrData: r.ocrData,
+      }));
+      
+      const batchDuplicates = findDuplicates(receiptData, otherBatchReceipts);
+      if (batchDuplicates.length > 0) {
+        duplicatesFound.push({ index: i, reason: `Within batch: ${batchDuplicates[0].match.reason}` });
+      }
+    }
+
+    if (duplicatesFound.length > 0) {
+      const details = duplicatesFound.map(d => `Receipt ${d.index + 1}: ${d.reason}`).join('\n');
+      toast.warning(`${duplicatesFound.length} potential duplicate(s) detected:\n${details}\nReview and correct, or submit again to proceed anyway.`);
+      
+      // Mark duplicates for visibility
+      setBatchReceipts(prev => prev.map((receipt, idx) => {
+        const isDup = duplicatesFound.some(d => d.index === idx);
+        return isDup ? { ...receipt, hasError: true } : receipt;
+      }));
+      return;
+    }
+
     let successCount = 0;
     for (const receipt of validReceipts) {
       try {
@@ -208,6 +335,8 @@ export function EmployeeDashboard() {
           category: receipt.category,
           date: receipt.date,
           description: receipt.description,
+          receiptHash: receipt.receiptHash,
+          ocrData: receipt.ocrData,
           status: 'pending',
           approvals: [],
           createdAt: new Date(),
@@ -374,6 +503,18 @@ export function EmployeeDashboard() {
                   required
                 />
               </div>
+
+              {duplicateWarning && (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertTitle>Potential Duplicate Detected</AlertTitle>
+                  <AlertDescription>
+                    {duplicateWarning.message} (Confidence: {duplicateWarning.confidence}%)
+                    <br />
+                    <span className="text-xs">Submit anyway to proceed, or cancel to review your expenses.</span>
+                  </AlertDescription>
+                </Alert>
+              )}
 
               <div className="flex justify-end gap-2">
                 <Button type="button" variant="outline" onClick={() => setIsSubmitOpen(false)}>
