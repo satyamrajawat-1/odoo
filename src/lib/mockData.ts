@@ -14,24 +14,28 @@ export function initializeMockData() {
       name: 'Sarah Chen - Director',
       email: 'sarah.chen@exescorp.com',
       role: 'admin',
+      isManagerApprover: false,
     },
     {
       id: 'admin2',
       name: 'Michael Torres - Finance',
       email: 'michael.torres@exescorp.com',
       role: 'admin',
+      isManagerApprover: false,
     },
     {
       id: 'manager1',
       name: 'Jessica Park',
       email: 'jessica.park@exescorp.com',
       role: 'manager',
+      isManagerApprover: true,
     },
     {
       id: 'manager2',
       name: 'David Kim',
       email: 'david.kim@exescorp.com',
       role: 'manager',
+      isManagerApprover: true,
     },
     {
       id: 'employee1',
@@ -39,6 +43,7 @@ export function initializeMockData() {
       email: 'alex.johnson@exescorp.com',
       role: 'employee',
       managerId: 'manager1',
+      isManagerApprover: false,
     },
     {
       id: 'employee2',
@@ -46,6 +51,7 @@ export function initializeMockData() {
       email: 'emma.wilson@exescorp.com',
       role: 'employee',
       managerId: 'manager2',
+      isManagerApprover: false,
     },
   ];
 

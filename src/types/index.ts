@@ -8,6 +8,7 @@ export interface User {
   email: string;
   role: Role;
   managerId?: string;
+  isManagerApprover?: boolean;
 }
 
 export interface Company {
@@ -51,8 +52,22 @@ export interface Expense {
   createdAt: Date;
 }
 
+export interface ApprovalSequenceStep {
+  step: number;
+  type: 'role' | 'user';
+  value: string; // role name or user id
+}
+
+export interface ApprovalSequence {
+  id: string;
+  name: string;
+  steps: ApprovalSequenceStep[];
+  isActive: boolean;
+}
+
 export interface ApprovalRule {
   type: ApprovalRuleType;
   threshold?: number; // For percentage rule
   specificApproverId?: string; // For specific approver rule
+  sequenceId?: string; // For sequential - which approval sequence to use
 }
