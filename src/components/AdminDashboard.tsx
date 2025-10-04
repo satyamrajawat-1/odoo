@@ -6,10 +6,11 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
 import { ExpenseCard } from './ExpenseCard';
 import { ApprovalTimeline } from './ApprovalTimeline';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Settings, Users, Receipt, GitBranch, Plus, Trash2, GripVertical } from 'lucide-react';
+import { Settings, Users, Receipt, GitBranch, Plus, Trash2, GripVertical, CheckCircle2, XCircle } from 'lucide-react';
 import { Expense, ApprovalRuleType, ApprovalSequence, ApprovalSequenceStep } from '@/types';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
@@ -126,6 +127,7 @@ function SortableStepItem({ step, index, totalSteps, users, onUpdateType, onUpda
 
 export function AdminDashboard() {
   const { 
+    currentUser,
     expenses, 
     users, 
     company, 
@@ -134,9 +136,11 @@ export function AdminDashboard() {
     updateApprovalRules,
     addApprovalSequence,
     updateApprovalSequence,
-    deleteApprovalSequence
+    deleteApprovalSequence,
+    processApproval
   } = useApp();
   const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null);
+  const [comment, setComment] = useState('');
   const [ruleType, setRuleType] = useState<ApprovalRuleType>(approvalRules.type);
   const [threshold, setThreshold] = useState(approvalRules.threshold?.toString() || '60');
   const [specificApprover, setSpecificApprover] = useState(approvalRules.specificApproverId || '');
@@ -159,6 +163,19 @@ export function AdminDashboard() {
     updateApprovalRules(rules);
     toast.success('Approval rules updated successfully!');
   };
+
+  const handleApproval = (decision: 'approved' | 'rejected') => {
+    if (!selectedExpense) return;
+
+    processApproval(selectedExpense.id, currentUser!.id, decision, comment);
+    toast.success(`Expense ${decision}!`);
+    setSelectedExpense(null);
+    setComment('');
+  };
+
+  const canApprove = selectedExpense?.approvals.some(
+    a => a.approverId === currentUser?.id && a.decision === 'pending'
+  );
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -503,7 +520,7 @@ export function AdminDashboard() {
         </TabsContent>
       </Tabs>
 
-      <Dialog open={!!selectedExpense} onOpenChange={() => setSelectedExpense(null)}>
+      <Dialog open={!!selectedExpense} onOpenChange={() => { setSelectedExpense(null); setComment(''); }}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Expense Details (Admin View)</DialogTitle>
@@ -534,6 +551,38 @@ export function AdminDashboard() {
                 <h4 className="font-semibold mb-3">Approval Timeline</h4>
                 <ApprovalTimeline approvals={selectedExpense.approvals} />
               </div>
+
+              {canApprove && (
+                <div className="space-y-4 pt-4 border-t">
+                  <div>
+                    <Label>Comment (optional)</Label>
+                    <Textarea
+                      value={comment}
+                      onChange={(e) => setComment(e.target.value)}
+                      placeholder="Add a comment..."
+                      className="mt-2"
+                    />
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={() => handleApproval('rejected')}
+                      variant="destructive"
+                      className="flex-1"
+                    >
+                      <XCircle className="mr-2 h-4 w-4" />
+                      Reject
+                    </Button>
+                    <Button
+                      onClick={() => handleApproval('approved')}
+                      className="flex-1 bg-gradient-success"
+                    >
+                      <CheckCircle2 className="mr-2 h-4 w-4" />
+                      Approve
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </DialogContent>
