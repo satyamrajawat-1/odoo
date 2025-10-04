@@ -76,10 +76,12 @@ npm run build
 Configured for Replit Autoscale deployment with production build optimization.
 
 ## Recent Changes
-- **2025-10-04**: Configured for Replit environment
-  - Updated Vite config to use port 5000 and host 0.0.0.0
-  - Configured development workflow for proper proxy handling
-  - Set up deployment configuration for autoscale
+- **2025-10-04**: Added login page and authentication
+  - Created login page with traditional email/password form
+  - Added one-click demo login buttons for all user roles (Admin, Manager, Employee)
+  - Updated navigation to show login page first, then dashboard after authentication
+  - Added logout functionality to user header
+  - Configured for Replit environment (port 5000, host 0.0.0.0, HMR disabled)
 
 ## User Preferences
 None specified yet.

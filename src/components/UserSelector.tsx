@@ -1,10 +1,16 @@
-import { User } from '@/types';
+import { useNavigate } from 'react-router-dom';
 import { useApp } from '@/contexts/AppContext';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Building2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Building2, LogOut } from 'lucide-react';
 
 export function UserSelector() {
-  const { currentUser, setCurrentUser, users, company } = useApp();
+  const { currentUser, setCurrentUser, company } = useApp();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    navigate('/');
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-gradient-primary shadow-md">
@@ -17,32 +23,21 @@ export function UserSelector() {
           </div>
         </div>
         
-        <Select
-          value={currentUser?.id}
-          onValueChange={(userId) => {
-            const user = users.find(u => u.id === userId);
-            setCurrentUser(user || null);
-          }}
-        >
-          <SelectTrigger className="w-[280px] bg-white/10 border-white/20 text-primary-foreground hover:bg-white/20">
-            <SelectValue placeholder="Select demo user..." />
-          </SelectTrigger>
-          <SelectContent>
-            {users
-              .sort((a, b) => {
-                const roleOrder = { admin: 0, manager: 1, employee: 2 };
-                return roleOrder[a.role] - roleOrder[b.role];
-              })
-              .map((user) => (
-                <SelectItem key={user.id} value={user.id}>
-                  <div className="flex flex-col">
-                    <span className="font-medium">{user.name}</span>
-                    <span className="text-xs text-muted-foreground capitalize">{user.role}</span>
-                  </div>
-                </SelectItem>
-              ))}
-          </SelectContent>
-        </Select>
+        <div className="flex items-center gap-4">
+          <div className="text-right">
+            <p className="font-medium text-primary-foreground">{currentUser?.name}</p>
+            <p className="text-xs text-primary-foreground/80 capitalize">{currentUser?.role}</p>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleLogout}
+            className="text-primary-foreground hover:bg-white/10"
+            data-testid="button-logout"
+          >
+            <LogOut className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
     </header>
   );
