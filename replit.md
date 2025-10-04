@@ -58,9 +58,19 @@ The application uses Supabase with the following main tables:
 
 ## Development
 
+### Running on Replit
+The application is configured to run on Replit with the following setup:
+- **Workflow**: "Server" runs `bun run dev` on port 5000
+- **Host**: 0.0.0.0 (required for Replit proxy)
+- **Port**: 5000 (only port accessible in Replit)
+- **Vite Config**: Configured with `allowedHosts: true` to work with Replit's iframe proxy
+- **HMR**: Disabled for Replit environment compatibility
+
 ### Running Locally
 The application runs on port 5000 with Vite's dev server:
 ```bash
+bun run dev
+# or
 npm run dev
 ```
 
@@ -76,9 +86,23 @@ npm run build
 ```
 
 ## Deployment
-Configured for Replit Autoscale deployment with production build optimization.
+Configured for Replit Autoscale deployment:
+- **Build**: `bun run build` - Creates optimized production bundle in `dist/`
+- **Run**: `bun run preview` - Serves the built application
+- **Type**: Autoscale (ideal for stateless web applications)
+
+## Replit Environment Setup
+- **Package Manager**: Bun (primary) and npm (fallback)
+- **Dependencies**: All installed via `bun install`
+- **Workflows**: Single "Server" workflow running development server
+- **Deployment**: Configured for Autoscale with production build
 
 ## Recent Changes
+- **2025-10-04**: Project imported and configured for Replit
+  - Installed all dependencies via bun
+  - Configured workflow to run on port 5000
+  - Set up deployment configuration for Autoscale
+  - Verified application runs correctly in Replit environment
 - **2025-10-04**: Enhanced approval workflow system
   - Added `isManagerApprover` field to User type to allow managers to opt-in/opt-out of approval workflows
   - Implemented configurable approval sequences with admin UI for creating and managing multi-step workflows
